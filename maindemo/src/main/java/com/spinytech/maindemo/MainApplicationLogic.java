@@ -1,5 +1,7 @@
 package com.spinytech.maindemo;
 
+import android.util.Log;
+
 import com.spinytech.macore.multiprocess.BaseApplicationLogic;
 import com.spinytech.macore.router.LocalRouter;
 
@@ -9,8 +11,8 @@ import com.spinytech.macore.router.LocalRouter;
 
 public class MainApplicationLogic extends BaseApplicationLogic {
     @Override
-    public void onCreate() {
+    public void onCreate(){
         super.onCreate();
-        LocalRouter.getInstance(mApplication).registerProvider("main",new MainProvider());
+        LocalRouter.getInstance(mApplicationLike).registerProvider("main",new MainProvider());
     }
 }

@@ -1,5 +1,7 @@
 package com.spinytech.musicdemo;
 
+import android.util.Log;
+
 import com.spinytech.macore.multiprocess.BaseApplicationLogic;
 import com.spinytech.macore.router.LocalRouter;
 
@@ -9,8 +11,10 @@ import com.spinytech.macore.router.LocalRouter;
 
 public class MusicApplicationLogic extends BaseApplicationLogic {
     @Override
-    public void onCreate() {
+    public void onCreate(){
         super.onCreate();
-        LocalRouter.getInstance(mApplication).registerProvider("music",new MusicProvider());
+        LocalRouter.getInstance(mApplicationLike).registerProvider("music",new MusicProvider());
+
+
     }
 }

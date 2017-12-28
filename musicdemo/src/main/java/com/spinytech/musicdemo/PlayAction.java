@@ -2,6 +2,7 @@ package com.spinytech.musicdemo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.spinytech.macore.MaAction;
 import com.spinytech.macore.MaActionResult;
@@ -15,12 +16,13 @@ import java.util.HashMap;
 public class PlayAction extends MaAction {
 
     @Override
-    public boolean isAsync(Context context, HashMap<String, String> requestData) {
+    public boolean isAsync(Context context,HashMap<String, String> requestData){
         return false;
     }
 
     @Override
-    public MaActionResult invoke(Context context, HashMap<String, String> requestData) {
+    public MaActionResult invoke(Context context,HashMap<String, String> requestData){
+
         Intent intent = new Intent(context,MusicService.class);
         intent.putExtra("command","play");
         context.startService(intent);

@@ -1,5 +1,6 @@
 package com.spinytech.macore.router;
 
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,7 @@ import com.spinytech.macore.ErrorAction;
 import com.spinytech.macore.IWideRouterAIDL;
 import com.spinytech.macore.MaAction;
 import com.spinytech.macore.MaActionResult;
-import com.spinytech.macore.MaApplication;
+import com.spinytech.macore.MaApplicationLike;
 import com.spinytech.macore.MaProvider;
 import com.spinytech.macore.tools.Logger;
 import com.spinytech.macore.tools.ProcessUtil;
@@ -33,7 +34,8 @@ public class LocalRouter {
     private String mProcessName = ProcessUtil.UNKNOWN_PROCESS_NAME;
     private static LocalRouter sInstance = null;
     private HashMap<String, MaProvider> mProviders = null;
-    private MaApplication mApplication;
+    private Application mApplication;
+    private MaApplicationLike mApplicationLike;
     private IWideRouterAIDL mWideRouterAIDL;
     private static ExecutorService threadPool = null;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -48,18 +50,19 @@ public class LocalRouter {
         }
     };
 
-    private LocalRouter(MaApplication context) {
-        mApplication = context;
-        mProcessName = ProcessUtil.getProcessName(context, ProcessUtil.getMyProcessId());
+    private LocalRouter(MaApplicationLike applicationLike) {
+        mApplicationLike = applicationLike;
+        mApplication = applicationLike.getApplication();
+        mProcessName = ProcessUtil.getProcessName(mApplication, ProcessUtil.getMyProcessId());
         mProviders = new HashMap<>();
-        if (mApplication.needMultipleProcess() && !WideRouter.PROCESS_NAME.equals(mProcessName)) {
+        if (mApplicationLike.needMultipleProcess() && !WideRouter.PROCESS_NAME.equals(mProcessName)) {
             connectWideRouter();
         }
     }
 
-    public static synchronized LocalRouter getInstance(@NonNull MaApplication context) {
+    public static synchronized LocalRouter getInstance(@NonNull MaApplicationLike applicationLike) {
         if (sInstance == null) {
-            sInstance = new LocalRouter(context);
+            sInstance = new LocalRouter(applicationLike);
         }
         return sInstance;
     }
@@ -131,7 +134,7 @@ public class LocalRouter {
                 LocalTask task = new LocalTask(routerResponse, params,attachment, context, targetAction);
                 routerResponse.mAsyncResponse = getThreadPool().submit(task);
             }
-        } else if (!mApplication.needMultipleProcess()) {
+        } else if (!mApplicationLike.needMultipleProcess()) {
             throw new Exception("Please make sure the returned value of needMultipleProcess in MaApplication is true, so that you can invoke other process action.");
         }
         // IPC request

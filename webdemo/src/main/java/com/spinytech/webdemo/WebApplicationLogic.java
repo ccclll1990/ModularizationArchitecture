@@ -1,5 +1,7 @@
 package com.spinytech.webdemo;
 
+import android.util.Log;
+
 import com.spinytech.macore.multiprocess.BaseApplicationLogic;
 import com.spinytech.macore.router.LocalRouter;
 
@@ -12,6 +14,8 @@ public class WebApplicationLogic extends BaseApplicationLogic {
     @Override
     public void onCreate() {
         super.onCreate();
-        LocalRouter.getInstance(mApplication).registerProvider("web",new WebProvider());
+        LocalRouter.getInstance(mApplicationLike).registerProvider("web",new WebProvider());
+
+
     }
 }

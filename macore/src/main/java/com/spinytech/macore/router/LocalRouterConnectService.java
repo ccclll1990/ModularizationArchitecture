@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.spinytech.macore.ILocalRouterAIDL;
 import com.spinytech.macore.MaActionResult;
-import com.spinytech.macore.MaApplication;
+import com.spinytech.macore.MaApplicationLike;
 
 /**
  * Created by wanglei on 2016/11/29.
@@ -25,7 +25,6 @@ public class LocalRouterConnectService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e("MRCS","onBind");
         return stub;
     }
 
@@ -33,7 +32,7 @@ public class LocalRouterConnectService extends Service {
 
         @Override
         public boolean checkResponseAsync(String routerRequest) throws RemoteException {
-            return LocalRouter.getInstance(MaApplication.getMaApplication()).
+            return LocalRouter.getInstance(MaApplicationLike.getMaApplicationLike()).
                     answerWiderAsync(new RouterRequest
                             .Builder(getApplicationContext())
                             .json(routerRequest)
@@ -43,7 +42,7 @@ public class LocalRouterConnectService extends Service {
         @Override
         public String route(String routerRequest) {
             try {
-                LocalRouter localRouter = LocalRouter.getInstance(MaApplication.getMaApplication());
+                LocalRouter localRouter = LocalRouter.getInstance(MaApplicationLike.getMaApplicationLike());
                 RouterRequest routerRequest1 = new RouterRequest
                         .Builder(getApplicationContext())
                         .json(routerRequest)
@@ -59,7 +58,7 @@ public class LocalRouterConnectService extends Service {
         @Override
         public boolean stopWideRouter() throws RemoteException {
             LocalRouter
-                    .getInstance(MaApplication.getMaApplication())
+                    .getInstance(MaApplicationLike.getMaApplicationLike())
                     .disconnectWideRouter();
             return true;
         }
@@ -67,7 +66,7 @@ public class LocalRouterConnectService extends Service {
         @Override
         public void connectWideRouter() throws RemoteException {
             LocalRouter
-                    .getInstance(MaApplication.getMaApplication())
+                    .getInstance(MaApplicationLike.getMaApplicationLike())
                     .connectWideRouter();
         }
     };

@@ -1,5 +1,7 @@
 package com.spinytech.picdemo;
 
+import android.util.Log;
+
 import com.spinytech.macore.multiprocess.BaseApplicationLogic;
 import com.spinytech.macore.router.LocalRouter;
 
@@ -12,6 +14,8 @@ public class PicApplicationLogic extends BaseApplicationLogic {
     @Override
     public void onCreate() {
         super.onCreate();
-        LocalRouter.getInstance(mApplication).registerProvider("pic",new PicProvider());
+        LocalRouter.getInstance(mApplicationLike).registerProvider("pic",new PicProvider());
+
+
     }
 }

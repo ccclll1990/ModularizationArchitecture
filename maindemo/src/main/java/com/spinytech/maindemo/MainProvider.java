@@ -1,5 +1,7 @@
 package com.spinytech.maindemo;
 
+import android.util.Log;
+
 import com.spinytech.macore.MaProvider;
 
 /**
@@ -8,9 +10,10 @@ import com.spinytech.macore.MaProvider;
 
 public class MainProvider extends MaProvider {
     @Override
-    protected void registerActions() {
+    protected void registerActions(){
         registerAction("sync",new SyncAction());
         registerAction("async",new AsyncAction());
         registerAction("attachment",new AttachObjectAction());
+
     }
 }

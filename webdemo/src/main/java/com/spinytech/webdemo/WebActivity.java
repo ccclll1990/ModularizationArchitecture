@@ -3,11 +3,12 @@ package com.spinytech.webdemo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.spinytech.macore.MaApplication;
+import com.spinytech.macore.MaApplicationLike;
 import com.spinytech.macore.router.LocalRouter;
 import com.spinytech.macore.router.RouterRequest;
 
@@ -16,10 +17,10 @@ public class WebActivity extends AppCompatActivity {
     private WebView mContentWv;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
-        mContentWv = (WebView) findViewById(R.id.web);
+        mContentWv = (WebView)findViewById(R.id.web);
         mContentWv.setWebViewClient(new MyWebViewClient());
         mContentWv.getSettings().setBuiltInZoomControls(true);
         mContentWv.getSettings().setJavaScriptEnabled(true);
@@ -28,14 +29,17 @@ public class WebActivity extends AppCompatActivity {
         mContentWv.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mContentWv.getSettings().setLoadWithOverviewMode(true);
         mContentWv.loadUrl("file:///android_asset/page.html");
+
+
+
     }
 
 
-    public void dispatchAction(String url) {
+    public void dispatchAction(String url){
         if (url.indexOf("your_protocol://") >= 0) {
             String command = url.substring("your_protocol://".length());
             try {
-                LocalRouter.getInstance(MaApplication.getMaApplication()).route(this, new RouterRequest.Builder(this).url(command).build());
+                LocalRouter.getInstance(MaApplicationLike.getMaApplicationLike()).route(this,new RouterRequest.Builder(this).url(command).build());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -44,7 +48,7 @@ public class WebActivity extends AppCompatActivity {
 
     class MyWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(WebView view,String url){
             if (!TextUtils.isEmpty(url) && url.startsWith("your_protocol://")) {
                 dispatchAction(url);
             } else {

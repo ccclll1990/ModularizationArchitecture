@@ -1,5 +1,6 @@
 package com.spinytech.macore.router;
 
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -11,7 +12,7 @@ import android.text.TextUtils;
 
 import com.spinytech.macore.ILocalRouterAIDL;
 import com.spinytech.macore.MaActionResult;
-import com.spinytech.macore.MaApplication;
+import com.spinytech.macore.MaApplicationLike;
 import com.spinytech.macore.tools.Logger;
 import com.spinytech.macore.tools.ProcessUtil;
 
@@ -30,14 +31,16 @@ public class WideRouter {
     public static final String PROCESS_NAME = "com.spiny.ma.widerouter";
     private static HashMap<String, ConnectServiceWrapper> sLocalRouterClasses;
     private static WideRouter sInstance = null;
-    private MaApplication mApplication;
+    private Application mApplication;
+    private MaApplicationLike mApplicationLike;
     private HashMap<String, ServiceConnection> mLocalRouterConnectionMap;
     private HashMap<String, ILocalRouterAIDL> mLocalRouterAIDLMap;
     boolean mIsStopping = false;
 
-    private WideRouter(MaApplication context) {
-        mApplication = context;
-        String checkProcessName = ProcessUtil.getProcessName(context, ProcessUtil.getMyProcessId());
+    private WideRouter(MaApplicationLike applicationLike) {
+        mApplicationLike = applicationLike;
+        mApplication = applicationLike.getApplication();
+        String checkProcessName = ProcessUtil.getProcessName(mApplication, ProcessUtil.getMyProcessId());
         if (!PROCESS_NAME.equals(checkProcessName)) {
             throw new RuntimeException("You should not initialize the WideRouter in process:" + checkProcessName);
         }
@@ -46,9 +49,9 @@ public class WideRouter {
         mLocalRouterAIDLMap = new HashMap<>();
     }
 
-    public static synchronized WideRouter getInstance(@NonNull MaApplication context) {
+    public static synchronized WideRouter getInstance(@NonNull MaApplicationLike applicationLike) {
         if (sInstance == null) {
-            sInstance = new WideRouter(context);
+            sInstance = new WideRouter(applicationLike);
         }
         return sInstance;
     }
@@ -67,11 +70,7 @@ public class WideRouter {
             return false;
         }
         Class<? extends LocalRouterConnectService> clazz = connectServiceWrapper.targetClass;
-        if (null == clazz) {
-            return false;
-        } else {
-            return true;
-        }
+        return null != clazz;
     }
 
     boolean connectLocalRouter(final String domain) {
@@ -178,11 +177,7 @@ public class WideRouter {
                 return false;
             }
             Class<? extends LocalRouterConnectService> clazz = connectServiceWrapper.targetClass;
-            if (null == clazz) {
-                return false;
-            } else {
-                return true;
-            }
+            return null != clazz;
         } else {
             try {
                 return target.checkResponseAsync(routerRequest);

@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.spinytech.macore.MaAction;
 import com.spinytech.macore.MaActionResult;
-import com.spinytech.macore.MaApplication;
+import com.spinytech.macore.MaApplicationLike;
 import com.spinytech.macore.router.LocalRouter;
 
 import java.util.HashMap;
@@ -18,12 +18,12 @@ import java.util.HashMap;
 public class ShutdownAction extends MaAction {
 
     @Override
-    public boolean isAsync(Context context, HashMap<String, String> requestData) {
+    public boolean isAsync(Context context,HashMap<String, String> requestData){
         return true;
     }
 
     @Override
-    public MaActionResult invoke(Context context, HashMap<String, String> requestData) {
+    public MaActionResult invoke(Context context,HashMap<String, String> requestData){
         MaActionResult result = new MaActionResult.Builder()
                 .code(MaActionResult.CODE_SUCCESS)
                 .msg("success")
@@ -32,11 +32,10 @@ public class ShutdownAction extends MaAction {
                 .build();
         context.getApplicationContext().stopService(new Intent(context,MusicService.class));
 
-        boolean stopslef =LocalRouter.getInstance(MaApplication.getMaApplication()).stopSelf(MusicRouterConnectService.class);
-        Log.e("stopslef",""+stopslef);
+        boolean stopslef = LocalRouter.getInstance(MaApplicationLike.getMaApplicationLike()).stopSelf(MusicRouterConnectService.class);
         new Thread(new Runnable() {
             @Override
-            public void run() {
+            public void run(){
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -45,6 +44,8 @@ public class ShutdownAction extends MaAction {
                 System.exit(0);
             }
         }).start();
+
+
         return result;
     }
 }
