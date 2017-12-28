@@ -38,6 +38,10 @@ If you are using ProGuard you might need to add the following option:
 
 [Android架构思考](http://blog.spinytech.com/2016/12/28/android_modularization/)
 
+
+2017.12.28 
+新增对Tinker的支持
+
 ## License
 
 
